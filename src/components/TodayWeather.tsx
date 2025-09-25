@@ -1,6 +1,6 @@
 import sunSrc from "../assets/images/icon-sunny.webp";
 
-export default function TodayWeather() {
+export default function TodayWeather({ isLoading }: { isLoading?: boolean }) {
     return (
         <section>
             <div className="rounded-20 flex h-143 flex-col items-center justify-center gap-8 bg-[url('./assets/images/bg-today-small.svg')] bg-cover md:flex-row md:justify-between md:bg-[url('./assets/images/bg-today-large.svg')] md:px-12">
@@ -31,7 +31,7 @@ export default function TodayWeather() {
                             Feels Like
                         </div>
                         <div className="text-3 mt-12 font-light text-white">
-                            18°
+                            –
                         </div>
                     </div>
                 ))}

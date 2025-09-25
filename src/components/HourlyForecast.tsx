@@ -1,7 +1,7 @@
 import sunSrc from "../assets/images/icon-sunny.webp";
 import DaysListbox from "./DaysListbox";
 
-export default function HourlyForecast() {
+export default function HourlyForecast({ isLoading }: { isLoading?: boolean }) {
     return (
         <section className="rounded-20 flex h-[696px] flex-col gap-8 bg-neutral-800 py-10 md:h-[702px]">
             <div className="flex items-center justify-between px-8 md:px-10">

@@ -1,6 +1,6 @@
 import sunSrc from "../assets/images/icon-sunny.webp";
 
-export default function DailyForecast() {
+export default function DailyForecast({ isLoading }: { isLoading?: boolean }) {
     return (
         <section>
             <h2 className="text-5 font-semibold text-white">Daily forecast</h2>
