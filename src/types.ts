@@ -32,5 +32,5 @@ type DailyWeather = {
 export type WeatherResponse = {
     current: CurrentWeather;
     hourly: HourlyWeather;
-    Daily: DailyWeather;
+    daily: DailyWeather;
 };

@@ -13,13 +13,12 @@ export default function PlaceSearch() {
         <div className="mt-24 grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_auto] md:gap-8 lg:mx-auto lg:max-w-328">
             <PlacesCombobox value={location} setValue={setLocation} />
 
-            {/* what is the point of this button?? search for locations or fetch the weather for a location? */}
             <Button
                 onClick={() => {
                     if (!location) return;
 
                     setCoords({
-                        latitude: location.longitude,
+                        latitude: location.latitude,
                         longitude: location.longitude,
                     });
                 }}

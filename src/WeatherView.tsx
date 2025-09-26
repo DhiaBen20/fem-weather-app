@@ -13,7 +13,7 @@ async function fetcher({
     latitude: number;
 }) {
     const res = await fetch(
-        `https://api.open-meteo.com/v1/forecast&latitude=${latitude}&longitude=${longitude}&daily=weather_code,temperature_2m_min,temperature_2m_max&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10mu`,
+        `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&daily=weather_code,temperature_2m_min,temperature_2m_max&hourly=temperature_2m,weather_code&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m`,
     );
 
     const error = new Error("");
@@ -40,15 +40,14 @@ export default function WeatherView() {
 
     const { isLoading, data } = useSWR(key, () => fetcher(coords!));
 
-    console.log(data);
-
-    return (
-        <div className="mt-16 lg:mt-24 lg:grid lg:grid-cols-3 lg:gap-16">
-            <div className="space-y-16 max-lg:mb-16 lg:col-span-2 lg:space-y-27">
-                <TodayWeather isLoading={isLoading} />
-                <DailyForecast isLoading={isLoading} />
+    if (data)
+        return (
+            <div className="mt-16 lg:mt-24 lg:grid lg:grid-cols-3 lg:gap-16">
+                <div className="space-y-16 max-lg:mb-16 lg:col-span-2 lg:space-y-27">
+                    <TodayWeather currentWeather={data.current} />
+                    <DailyForecast dailyTemperature={data.daily} />
+                </div>
+                <HourlyForecast hourlyTemperature={data.hourly} />
             </div>
-            <HourlyForecast isLoading={isLoading} />
-        </div>
-    );
+        );
 }
