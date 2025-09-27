@@ -1,3 +1,5 @@
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorPage from "./components/ErrorPage";
 import Header from "./components/Header";
 import LocationProvider from "./components/LocationProvider";
 import PlaceSearch from "./components/PlaceSearch";
@@ -11,15 +13,17 @@ export default function App() {
                 <div className="min-h-screen bg-neutral-900">
                     <Header />
 
-                    <main className="mt-24 px-8 pb-12 md:px-12 lg:mx-56">
-                        <h1 className="font-title text-2 text-center font-bold tracking-[1px] text-white max-lg:max-w-241 md:mx-auto">
-                            How’s the sky looking today?
-                        </h1>
+                    <ErrorBoundary fallback={<ErrorPage />}>
+                        <main className="app-container mt-24 pb-12">
+                            <h1 className="font-title text-2 text-center font-bold tracking-[1px] text-white max-lg:max-w-241 md:mx-auto">
+                                How’s the sky looking today?
+                            </h1>
 
-                        <PlaceSearch />
+                            <PlaceSearch />
 
-                        <WeatherView />
-                    </main>
+                            <WeatherView />
+                        </main>
+                    </ErrorBoundary>
                 </div>
             </UnitsProvider>
         </LocationProvider>

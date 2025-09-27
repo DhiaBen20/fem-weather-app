@@ -4,6 +4,9 @@ import HourlyForecast from "./components/HourlyForecast";
 import TodayWeather from "./components/TodayWeather";
 import useLocationContext from "./hooks/useLocationContext";
 import type { WeatherResponse } from "./types";
+import TodayWeatherSkeleton from "./components/TodayWeatherSkeleton";
+import DailyForecastSkeleton from "./components/DailyForecastSkeleton";
+import HourlyForecastSkeleton from "./components/HourlyForecastSkeleton";
 
 async function fetcher({
     latitude,
@@ -39,6 +42,17 @@ export default function WeatherView() {
         : null;
 
     const { isLoading, data } = useSWR(key, () => fetcher(coords!));
+
+    if (isLoading)
+        return (
+            <div className="mt-16 lg:mt-24 lg:grid lg:grid-cols-3 lg:gap-16">
+                <div className="space-y-16 max-lg:mb-16 lg:col-span-2 lg:space-y-27">
+                    <TodayWeatherSkeleton />
+                    <DailyForecastSkeleton />
+                </div>
+                <HourlyForecastSkeleton />
+            </div>
+        );
 
     if (data)
         return (
