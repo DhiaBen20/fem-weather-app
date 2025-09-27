@@ -1,5 +1,11 @@
-import sunSrc from "../assets/images/icon-sunny.webp";
-import { formatToUnitNumber, getWeatherIcon } from "../helpers";
+import {
+    displayPrecipitation,
+    displayTemperature,
+    displayWindSpeed,
+    formatToUnitNumber,
+    getWeatherIcon,
+} from "../helpers";
+import useUnitsContext from "../hooks/useUnitsContext";
 import type { WeatherResponse } from "../types";
 import WeatherInfoCard from "./WeatherInfoCard";
 
@@ -8,6 +14,8 @@ export default function TodayWeather({
 }: {
     currentWeather: WeatherResponse["current"];
 }) {
+    const { units } = useUnitsContext();
+
     return (
         <section>
             <div className="rounded-20 flex h-143 flex-col items-center justify-center gap-8 bg-[url('./assets/images/bg-today-small.svg')] bg-cover md:flex-row md:justify-between md:bg-[url('./assets/images/bg-today-large.svg')] md:px-12">
@@ -23,9 +31,9 @@ export default function TodayWeather({
                         className="size-60"
                     />
                     <span className="text-1 font-semibold text-white italic">
-                        {formatToUnitNumber(
-                            Math.round(currentWeather.temperature_2m),
-                            "celsius",
+                        {displayTemperature(
+                            currentWeather.temperature_2m,
+                            units.temperature,
                         )}
                     </span>
                 </div>
@@ -35,9 +43,9 @@ export default function TodayWeather({
                 {[
                     {
                         title: "Feels Like",
-                        value: formatToUnitNumber(
-                            Math.round(currentWeather.apparent_temperature),
-                            "celsius",
+                        value: displayTemperature(
+                            currentWeather.apparent_temperature,
+                            units.temperature,
                         ),
                     },
                     {
@@ -49,16 +57,16 @@ export default function TodayWeather({
                     },
                     {
                         title: "Wind",
-                        value: formatToUnitNumber(
+                        value: displayWindSpeed(
                             currentWeather.wind_speed_10m,
-                            "kilometer-per-hour",
+                            units.windSpeed,
                         ),
                     },
                     {
                         title: "Precipitation",
-                        value: formatToUnitNumber(
+                        value: displayPrecipitation(
                             currentWeather.precipitation,
-                            "millimeter",
+                            units.precipitation,
                         ),
                     },
                 ].map((data, i) => (

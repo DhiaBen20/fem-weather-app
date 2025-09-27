@@ -1,6 +1,6 @@
 import { useState } from "react";
-import sunSrc from "../assets/images/icon-sunny.webp";
-import { formatToUnitNumber, transformHourlyTemperatures } from "../helpers";
+import { displayTemperature, transformHourlyTemperatures } from "../helpers";
+import useUnitsContext from "../hooks/useUnitsContext";
 import type { WeatherResponse } from "../types";
 import DaysListbox from "./DaysListbox";
 
@@ -9,6 +9,8 @@ export default function HourlyForecast({
 }: {
     hourlyTemperature: WeatherResponse["hourly"];
 }) {
+    const { units } = useUnitsContext();
+
     const [selectedDay, setSelectedDay] = useState(0);
 
     return (
@@ -54,9 +56,9 @@ export default function HourlyForecast({
                         </div>
 
                         <div className="text-7 text-white">
-                            {formatToUnitNumber(
-                                Math.round(hour.temperature),
-                                "celsius",
+                            {displayTemperature(
+                                hour.temperature,
+                                units.temperature,
                             )}
                         </div>
                     </div>

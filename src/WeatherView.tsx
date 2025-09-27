@@ -2,7 +2,7 @@ import useSWR from "swr";
 import DailyForecast from "./components/DailyForecast";
 import HourlyForecast from "./components/HourlyForecast";
 import TodayWeather from "./components/TodayWeather";
-import { useLocationContext } from "./LocationContext";
+import useLocationContext from "./hooks/useLocationContext";
 import type { WeatherResponse } from "./types";
 
 async function fetcher({

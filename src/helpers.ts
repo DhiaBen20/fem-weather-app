@@ -6,6 +6,7 @@ import rainSrc from "./assets/images/icon-rain.webp";
 import snowSrc from "./assets/images/icon-snow.webp";
 import stormSrc from "./assets/images/icon-storm.webp";
 import sunnySrc from "./assets/images/icon-sunny.webp";
+import type { State } from "./contexts/UnitsContext";
 import type { WeatherResponse } from "./types";
 
 export function formatToUnitNumber(value: number, unit: string) {
@@ -95,4 +96,47 @@ export function getWeatherIcon(code: number) {
             return src;
         }
     }
+}
+
+export function convertToFahrenheit(value: number) {
+    return (value * 9) / 5 + 32;
+}
+
+export function convertToMiles(value: number) {
+    return value / 1.60934;
+}
+
+export function convertToInches(value: number) {
+    return value / 25.4;
+}
+
+export function displayTemperature(value: number, unit: State["temperature"]) {
+    const convertedTemperature =
+        unit === "celsius" ? value : convertToFahrenheit(value);
+
+    return formatToUnitNumber(
+        Math.round(convertedTemperature),
+        unit === "celsius" ? "celsius" : "fahrenheit",
+    );
+}
+
+export function displayWindSpeed(value: number, unit: State["windSpeed"]) {
+    const convertedSpeed = unit === "kmh" ? value : convertToMiles(value);
+
+    return formatToUnitNumber(
+        Math.round(convertedSpeed),
+        unit === "kmh" ? "kilometer-per-hour" : "mile-per-hour",
+    );
+}
+
+export function displayPrecipitation(
+    value: number,
+    unit: State["precipitation"],
+) {
+    const convertedSpeed = unit === "mm" ? value : convertToInches(value);
+
+    return formatToUnitNumber(
+        Math.round(convertedSpeed),
+        unit === "mm" ? "millimeter" : "inch",
+    );
 }

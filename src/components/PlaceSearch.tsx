@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocationContext } from "../LocationContext";
+import useLocationContext from "../hooks/useLocationContext";
 import type { Location } from "../types";
 import Button from "./Button";
 import PlacesCombobox from "./PlacesCombobox";

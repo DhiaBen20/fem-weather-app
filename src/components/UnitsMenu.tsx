@@ -8,47 +8,39 @@ import {
 import checkSrc from "../assets/images/icon-checkmark.svg";
 import chevronDownSrc from "../assets/images/icon-dropdown.svg";
 import gearSrc from "../assets/images/icon-units.svg";
-import { useReducer } from "react";
+import type { State } from "../contexts/UnitsContext";
+import useUnitsContext from "../hooks/useUnitsContext";
 
-const TEMPERATURE_CELSIUS = "celsius";
-const TEMPERATURE_FAHRENHEIT = "fahrenheit";
-
-const temperature = [
+const temperature: { label: string; value: State["temperature"] }[] = [
     {
         label: "Celsius (°C)",
-        value: TEMPERATURE_CELSIUS,
+        value: "celsius",
     },
     {
         label: "Fahrenheit (°F)",
-        value: TEMPERATURE_FAHRENHEIT,
+        value: "fahrenheit",
     },
 ] as const;
 
-const SPEED_KILOMETERS = "kmh";
-const SPEED_MILES = "mph";
-
-const windSpeed = [
+const windSpeed: { label: string; value: State["windSpeed"] }[] = [
     {
         label: "km/h",
-        value: SPEED_KILOMETERS,
+        value: "kmh",
     },
     {
         label: "mph",
-        value: SPEED_MILES,
+        value: "mph",
     },
 ] as const;
 
-const PRECIPITATION_MILLIMETERS = "mm";
-const PRECIPITATION_INCHES = "in";
-
-const precipitation = [
+const precipitation: { label: string; value: State["precipitation"] }[] = [
     {
         label: "Millimeters (mm)",
-        value: PRECIPITATION_MILLIMETERS,
+        value: "mm",
     },
     {
         label: "Inches (in)",
-        value: PRECIPITATION_INCHES,
+        value: "in",
     },
 ] as const;
 
@@ -62,54 +54,8 @@ const groups = [
     },
 ];
 
-type State = {
-    system: "metric" | "imperial";
-    temperature: typeof TEMPERATURE_CELSIUS | typeof TEMPERATURE_FAHRENHEIT;
-    windSpeed: typeof SPEED_KILOMETERS | typeof SPEED_MILES;
-    precipitation:
-        | typeof PRECIPITATION_MILLIMETERS
-        | typeof PRECIPITATION_INCHES;
-};
-
-type Action =
-    | { type: "switch_to_imperial"; payload?: null }
-    | { type: "switch_to_metric"; payload?: null }
-    | { type: "check_one_type"; payload: Partial<Omit<State, "system">> };
-
-function reducer(prevState: State, action: Action): State {
-    const { type, payload } = action;
-
-    switch (type) {
-        case "switch_to_metric":
-            return {
-                system: "metric",
-                temperature: temperature[0].value,
-                windSpeed: windSpeed[0].value,
-                precipitation: precipitation[0].value,
-            };
-        case "switch_to_imperial":
-            return {
-                system: "imperial",
-                temperature: temperature[1].value,
-                windSpeed: windSpeed[1].value,
-                precipitation: precipitation[1].value,
-            };
-        case "check_one_type":
-            return { ...prevState, ...payload };
-        default:
-            break;
-    }
-
-    throw new Error(`Unknown type ${type}`);
-}
-
 export default function UnitsMenu() {
-    const [state, dispatch] = useReducer(reducer, {
-        system: "metric",
-        temperature: temperature[0].value,
-        windSpeed: windSpeed[0].value,
-        precipitation: precipitation[0].value,
-    });
+    const { units, dispatch } = useUnitsContext();
 
     return (
         <Popover>
@@ -130,14 +76,14 @@ export default function UnitsMenu() {
                     className="rounded-8 text-7 w-full px-4 py-5 text-left text-white outline-none hover:bg-neutral-700 focus:bg-neutral-700 data-selected:bg-neutral-700"
                     onClick={() => {
                         dispatch(
-                            state.system === "metric"
+                            units.system === "metric"
                                 ? { type: "switch_to_imperial" }
                                 : { type: "switch_to_metric" },
                         );
                     }}
                 >
-                    {state.system === "metric" && "Switch to Imperial"}
-                    {state.system === "imperial" && "Switch to Metric"}
+                    {units.system === "metric" && "Switch to Imperial"}
+                    {units.system === "imperial" && "Switch to Metric"}
                 </button>
 
                 {groups.map((group, i) => (
@@ -155,7 +101,7 @@ export default function UnitsMenu() {
 
                         <RadioGroup
                             aria-label={group.label}
-                            value={state[group.key]}
+                            value={units[group.key]}
                             onChange={(v) =>
                                 dispatch({
                                     type: "check_one_type",

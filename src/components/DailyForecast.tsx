@@ -1,5 +1,5 @@
-import sunSrc from "../assets/images/icon-sunny.webp";
-import { formatToUnitNumber, transformDailyTemperatures } from "../helpers";
+import { displayTemperature, transformDailyTemperatures } from "../helpers";
+import useUnitsContext from "../hooks/useUnitsContext";
 import type { WeatherResponse } from "../types";
 
 export default function DailyForecast({
@@ -7,6 +7,8 @@ export default function DailyForecast({
 }: {
     dailyTemperature: WeatherResponse["daily"];
 }) {
+    const { units } = useUnitsContext();
+
     return (
         <section>
             <h2 className="text-5 font-semibold text-white">Daily forecast</h2>
@@ -21,15 +23,15 @@ export default function DailyForecast({
                         <img src={day.weatherIcon} alt="" className="size-30" />
                         <div className="text-7 flex w-full items-center justify-between text-white">
                             <span>
-                                {formatToUnitNumber(
+                                {displayTemperature(
                                     day.minTemperature,
-                                    "celsius",
+                                    units.temperature,
                                 )}
                             </span>
                             <span>
-                                {formatToUnitNumber(
+                                {displayTemperature(
                                     day.maxTemperature,
-                                    "celsius",
+                                    units.temperature,
                                 )}
                             </span>
                         </div>
