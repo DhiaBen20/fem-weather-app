@@ -1,12 +1,12 @@
 import useSWR from "swr";
 import DailyForecast from "./components/DailyForecast";
+import DailyForecastSkeleton from "./components/DailyForecastSkeleton";
 import HourlyForecast from "./components/HourlyForecast";
+import HourlyForecastSkeleton from "./components/HourlyForecastSkeleton";
 import TodayWeather from "./components/TodayWeather";
+import TodayWeatherSkeleton from "./components/TodayWeatherSkeleton";
 import useLocationContext from "./hooks/useLocationContext";
 import type { WeatherResponse } from "./types";
-import TodayWeatherSkeleton from "./components/TodayWeatherSkeleton";
-import DailyForecastSkeleton from "./components/DailyForecastSkeleton";
-import HourlyForecastSkeleton from "./components/HourlyForecastSkeleton";
 
 async function fetcher({
     latitude,
@@ -35,13 +35,24 @@ async function fetcher({
 }
 
 export default function WeatherView() {
-    const { coords } = useLocationContext();
+    const { searchedLocation, initialPosition } = useLocationContext();
 
-    const key = coords
-        ? `weather.${coords.longitude}.${coords.latitude}`
-        : null;
+    const key = [
+        searchedLocation
+            ? {
+                  longitude: searchedLocation.longitude,
+                  latitude: searchedLocation.latitude,
+              }
+            : null,
+        initialPosition
+            ? {
+                  longitude: initialPosition.coords.longitude,
+                  latitude: initialPosition.coords.latitude,
+              }
+            : null,
+    ].filter((v) => v)[0];
 
-    const { isLoading, data } = useSWR(key, () => fetcher(coords!));
+    const { isLoading, data: data } = useSWR(key, fetcher);
 
     if (isLoading)
         return (

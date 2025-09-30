@@ -58,14 +58,11 @@ export default function PlacesCombobox({
 }
 
 function AsyncOptions({ query }: { query: null | string }) {
-    const abortControllerRef = new AbortController();
-
     const { isLoading, data } = useSWR<{ results?: Location[] }>(
         query ? `places.${query}` : null,
         () =>
             fetch(
                 `https://geocoding-api.open-meteo.com/v1/search?name=${query}`,
-                { signal: abortControllerRef.signal },
             ).then((res) => res.json()),
     );
 

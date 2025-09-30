@@ -5,6 +5,7 @@ import {
     formatToUnitNumber,
     getWeatherIcon,
 } from "../helpers";
+import useLocationContext from "../hooks/useLocationContext";
 import useUnitsContext from "../hooks/useUnitsContext";
 import type { WeatherResponse } from "../types";
 import WeatherInfoCard from "./WeatherInfoCard";
@@ -15,13 +16,30 @@ export default function TodayWeather({
     currentWeather: WeatherResponse["current"];
 }) {
     const { units } = useUnitsContext();
+    const { reverseGeocodedLocation, searchedLocation } = useLocationContext();
+
+    const name = [
+        searchedLocation
+            ? `${searchedLocation.name}, ${searchedLocation.country}`
+            : null,
+        reverseGeocodedLocation
+            ? `${reverseGeocodedLocation.address.city}, ${reverseGeocodedLocation.address.country}`
+            : null,
+    ].filter((v) => v)[0];
 
     return (
         <section>
             <div className="rounded-20 flex h-143 flex-col items-center justify-center gap-8 bg-[url('./assets/images/bg-today-small.svg')] bg-cover md:flex-row md:justify-between md:bg-[url('./assets/images/bg-today-large.svg')] md:px-12">
-                <div className="flex flex-col items-center gap-6 md:items-start">
-                    <span className="text-4 font-bold text-white">city</span>
-                    <span className="text-6 text-white/80">–, Sep –, 2025</span>
+                <div className="flex flex-col items-center gap-6 md:items-start px-12">
+                    <span className="text-center md:text-left text-4 font-bold text-white">{name}</span>
+                    <span className="text-center md:text-left text-6 text-white/80">
+                        {new Date().toLocaleDateString("en-us", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                            weekday: "long",
+                        })}
+                    </span>
                 </div>
 
                 <div className="flex items-center gap-10">
